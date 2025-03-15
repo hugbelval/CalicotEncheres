@@ -26,20 +26,3 @@ resource virtualNetwork 'Microsoft.Network/virtualNetworks@2019-11-01' = {
     ]
   }
 }
-
-//2.
-
-resource webApplication 'Microsoft.Web/sites@2021-01-15' = {
-  name: 'app-calicot-dev-19'
-  //tier:'Standard S1'
-  location: 'Canada Central'
-  tags: {
-    'hidden-related:${resourceGroup().id}/providers/Microsoft.Web/serverfarms/appServicePlan': 'Resource'
-  }
-  properties: {
-    serverFarmId: 'webServerFarms.id'
-  }
-  
-}
-
-

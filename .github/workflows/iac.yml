@@ -22,3 +22,23 @@ jobs:
         template: CalicotEncheres/main.bicep
         parameters: CalicotEncheres/bicep_params.json
         failOnStdErr: false
+
+    # Setup .NET Core SDK
+   #   - name: Setup .NET Core
+    #  uses: actions/setup-dotnet@v3
+     # with:
+    #    dotnet-version: 8.0
+    
+    # Run dotnet build and publish
+    #- name: dotnet build and publish
+    #  run: |
+    #    dotnet restore
+    #    dotnet build --configuration Release
+    #    dotnet publish -c Release --property:PublishDir='app-calicot-dev-19/myapp' 
+        
+    # Deploy to Azure Web apps
+   # - name: 'Run Azure webapp deploy action using publish profile credentials'
+   #   uses: azure/webapps-deploy@v3
+   #   with: 
+   #     app-name: app-calicot-dev-19 # Replace with your app name
+   #     package: app-calicot-dev-19/package/myapp'

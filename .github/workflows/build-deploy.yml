@@ -19,5 +19,5 @@ jobs:
         subscriptionId: ${{ secrets.AZURE_CRED.subscriptionId }}
         resourceGroupName: rg-calicot-commun-001
         template: CalicotEncheres/web.bicep
-        parameters: CalicotEncheres/bicep_params.json
+        parameters: CalicotEncheres/bicep_params_web.json
         failOnStdErr: false

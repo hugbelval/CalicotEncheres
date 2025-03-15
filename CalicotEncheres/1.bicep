@@ -89,7 +89,7 @@ resource autoScaleSetting 'Microsoft.Insights/autoscalesettings@2022-10-01' = {
               timeAggregation: 'Average'
               timeGrain: 'PT1M'
               dimensions: []
-              metricResourceUri: imageUrl
+              metricResourceUri: resourceId('Microsoft.Web/sites', webApp.name)
               timeWindow: 'PT5M'
             }
             scaleAction: {
@@ -102,7 +102,7 @@ resource autoScaleSetting 'Microsoft.Insights/autoscalesettings@2022-10-01' = {
         ]
       }
     ]
-    targetResourceUri: imageUrl
+    targetResourceUri: resourceId('Microsoft.Web/sites', webApp.name)
     enabled: true
   }
 }

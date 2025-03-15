@@ -30,6 +30,7 @@ resource virtualNetwork 'Microsoft.Network/virtualNetworks@2019-11-01' = {
 //2
 
 param location string = 'Canada Central'
+output environmentOutput object = environment()
 
 resource appServicePlan 'Microsoft.Web/serverfarms@2021-02-01' = {
   name: 'plan-calicot-dev-19'
@@ -44,7 +45,7 @@ resource appServicePlan 'Microsoft.Web/serverfarms@2021-02-01' = {
   }
 }
 
-resource webApp 'Microsoft.Web/sites@2021-02-01' = {
+/*resource webApp 'Microsoft.Web/sites@2021-02-01' = {
   name: 'app-calicot-dev-19'
   location: location
   properties: {
@@ -55,7 +56,7 @@ resource webApp 'Microsoft.Web/sites@2021-02-01' = {
       appSettings: [
         {
           name: 'ImageUrl'
-          value: 'https://stcalicotprod000.blob.core.windows.net/images/'
+          value: imageUrl 
         }
       ]
     }
@@ -103,3 +104,4 @@ resource autoScaleSetting 'Microsoft.Insights/autoscaleSettings@2021-05-01' = {
     enabled: true
   }
 }
+*/

@@ -12,7 +12,7 @@ jobs:
     - name: Restore Database from .bacpac
       uses: Azure/sql-action@v1
       with:
-        server-name: ${{ secrets.sqlManagementEndpointUrl }}
+        server-name: ${{ secrets.AZURE_CRED.sqlManagementEndpointUrl }}
         database-name: sqldb-calicot-dev-19
         admin-user: adminuser
         admin-password: secret12678!!!!$$$$SSS 

@@ -66,7 +66,7 @@ resource webApp 'Microsoft.Web/sites@2021-02-01' = {
   }
 }
 
-resource autoScaleSetting 'Microsoft.Insights/autoscaleSettings@2021-05-01' = {
+resource autoScaleSetting 'Microsoft.Insights/autoscalesettings@2022-10-01' = {
   name: 'autoscale-calicot-dev-19'
   location: location
   properties: {
@@ -74,9 +74,9 @@ resource autoScaleSetting 'Microsoft.Insights/autoscaleSettings@2021-05-01' = {
       {
         name: 'defaultProfile'
         capacity: {
-          default: 1
-          minimum: 1
-          maximum: 2
+          default: '1'
+          minimum: '1'
+          maximum: '2'
         }
         rules: [
           {
@@ -89,11 +89,12 @@ resource autoScaleSetting 'Microsoft.Insights/autoscaleSettings@2021-05-01' = {
               timeAggregation: 'Average'
               timeGrain: 'PT1M'
               dimensions: []
+              metricResourceUri: webApp.id
+              timeWindow: 'PT5M'
             }
             scaleAction: {
               direction: 'Increase'
               type: 'ChangeCount'
-              value: 1
               cooldown: 'PT5M'
             }
           }

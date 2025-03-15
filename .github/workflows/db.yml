@@ -1,0 +1,20 @@
+name: Populate DB
+on:
+    workflow_dispatch:
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+    steps:
+
+    - name: Checkout code
+      uses: actions/checkout@main
+
+    - name: Restore Database from .bacpac
+      uses: Azure/sql-action@v2
+      with:
+        server-name: ${{ secrets.sqlManagementEndpointUrl }}
+        database-name: sqldb-calicot-dev-19
+        admin-user: adminuser
+        admin-password: secret12678!!!!$$$$SSS 
+        dacpac-package: db/Auctions_Data.bacpac
+        sql-package-action: 'Import' # Crucial for .bacpac import

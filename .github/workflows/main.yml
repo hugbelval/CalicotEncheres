@@ -19,5 +19,4 @@ jobs:
         subscriptionId: ${{ secrets.AZURE_CRED.subscriptionId }}
         resourceGroupName: rg-calicot-commun-001
         template: ./CalicotEncheres/1.bicep
-        parameters: 'storagePrefix=stcalicotprod000 storageSKU=Standard_LRS'
         failOnStdErr: false

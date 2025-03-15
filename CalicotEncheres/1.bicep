@@ -65,7 +65,7 @@ resource webApp 'Microsoft.Web/sites@2021-02-01' = {
     type: 'SystemAssigned'
   }
 }
-
+/*
 resource autoScaleSetting 'Microsoft.Insights/autoscalesettings@2022-10-01' = {
   name: 'autoscale-calicot-dev-19'
   location: location
@@ -89,7 +89,7 @@ resource autoScaleSetting 'Microsoft.Insights/autoscalesettings@2022-10-01' = {
               timeAggregation: 'Average'
               timeGrain: 'PT1M'
               dimensions: []
-              metricResourceUri: resourceId('Microsoft.Web/sites', webApp.name)
+              metricResourceUri: webApp.id
               timeWindow: 'PT5M'
             }
             scaleAction: {
@@ -102,8 +102,8 @@ resource autoScaleSetting 'Microsoft.Insights/autoscalesettings@2022-10-01' = {
         ]
       }
     ]
-    targetResourceUri: resourceId('Microsoft.Web/sites', webApp.name)
+    targetResourceUri: webApp.id
     enabled: true
   }
-}
+}*/
 

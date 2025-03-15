@@ -10,7 +10,7 @@ jobs:
       uses: actions/checkout@main
 
     - name: Restore Database from .bacpac
-      uses: Azure/sql-action@v2
+      uses: Azure/sql-action@v1
       with:
         server-name: ${{ secrets.sqlManagementEndpointUrl }}
         database-name: sqldb-calicot-dev-19

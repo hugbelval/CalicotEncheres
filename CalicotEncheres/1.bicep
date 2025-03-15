@@ -107,3 +107,38 @@ resource autoScaleSetting 'Microsoft.Insights/autoscalesettings@2022-10-01' = {
   }
 }*/
 
+//3
+param adminUser string = 'adminuser'
+@secure()
+param adminPassword string = ''
+
+resource sqlServer 'Microsoft.Sql/servers@2022-05-01-preview' = {
+  name: 'sqlsrv-calicot-dev-19'
+  location: location
+  properties: {
+    administratorLogin: adminUser
+    administratorLoginPassword: adminPassword
+  }
+}
+
+resource sqlDatabase 'Microsoft.Sql/servers/databases@2022-05-01-preview' = {
+  name: 'sqldb-calicot-dev-19'
+  parent: sqlServer
+  properties: {
+    collation: 'SQL_Latin1_General_CP1_CI_AS'
+  }
+  sku: {
+    name: 'Basic'
+    tier: 'Basic'
+  }
+  location: location
+}
+
+resource firewallRule 'Microsoft.Sql/servers/firewallRules@2022-05-01-preview' = {
+  name: 'AllowAllIPs'
+  parent: sqlServer
+  properties: {
+    startIpAddress: '0.0.0.0'
+    endIpAddress: '255.255.255.255'
+  }
+}

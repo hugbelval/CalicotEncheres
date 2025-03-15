@@ -1,39 +1,75 @@
-param webAppName string = uniqueString(resourceGroup().id) // Generate unique String for web app name
-param sku string = 'F1' // The SKU of App Service Plan
-param linuxFxVersion string = 'node|14-lts' // The runtime stack of web app
-param location string = resourceGroup().location // Location for all resources
-param repositoryUrl string = 'https://github.com/Azure-Samples/nodejs-docs-hello-world'
-param branch string = 'main'
-var webSiteName = toLower('wapp-${webAppName}')
+param codeIdentification string
+param location string = 'Canada Central'
 
-resource appServicePlan 'Microsoft.Web/serverfarms@2020-06-01' = {
+resource appServicePlan 'Microsoft.Web/serverfarms@2021-02-01' = {
   name: 'plan-calicot-dev-19'
-  location: 'Canada Central'
-  properties: {
-    reserved: true
-  }
+  location: location
   sku: {
-    name: sku
+    name: 'S1'
+    tier: 'Standard'
   }
-  kind: 'linux'
+  properties: {
+    perSiteScaling: false
+    maximumElasticWorkerCount: 2
+  }
 }
 
-resource appService 'Microsoft.Web/sites@2020-06-01' = {
-  name: webSiteName
+resource webApp 'Microsoft.Web/sites@2021-02-01' = {
+  name: 'app-calicot-dev-${codeIdentification}'
   location: location
   properties: {
     serverFarmId: appServicePlan.id
+    httpsOnly: true
     siteConfig: {
-      linuxFxVersion: linuxFxVersion
+      alwaysOn: true
+      appSettings: [
+        {
+          name: 'ImageUrl'
+          value: 'https://stcalicotprod000.blob.core.windows.net/images/'
+        }
+      ]
+    }
+    identity: {
+      type: 'SystemAssigned'
     }
   }
 }
 
-resource srcControls 'Microsoft.Web/sites/sourcecontrols@2021-01-01' = {
-  name: '${appService.name}/web'
+resource autoScaleSetting 'Microsoft.Insights/autoscaleSettings@2021-05-01' = {
+  name: 'autoscale-calicot-dev-${codeIdentification}'
+  location: location
   properties: {
-    repoUrl: repositoryUrl
-    branch: branch
-    isManualIntegration: true
+    profiles: [
+      {
+        name: 'defaultProfile'
+        capacity: {
+          default: 1
+          minimum: 1
+          maximum: 2
+        }
+        rules: [
+          {
+            metricTrigger: {
+              metricName: 'CpuPercentage'
+              metricNamespace: 'Microsoft.Web/sites'
+              operator: 'GreaterThan'
+              statistic: 'Average'
+              threshold: 70
+              timeAggregation: 'Average'
+              timeGrain: 'PT1M'
+              dimensions: []
+            }
+            scaleAction: {
+              direction: 'Increase'
+              type: 'ChangeCount'
+              value: 1
+              cooldown: 'PT5M'
+            }
+          }
+        ]
+      }
+    ]
+    targetResourceUri: webApp.id
+    enabled: true
   }
 }

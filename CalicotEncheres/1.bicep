@@ -142,3 +142,16 @@ resource firewallRule 'Microsoft.Sql/servers/firewallRules@2022-05-01-preview' =
     endIpAddress: '255.255.255.255'
   }
 }
+
+resource keyVault 'Microsoft.KeyVault/vaults@2023-02-01' = {
+  name: 'kv-calicot-dev-19'
+  location: 'canadacentral'
+  properties: {
+    sku: {
+      family: 'A'
+      name: 'standard'
+    }
+    tenantId: subscription().tenantId
+    accessPolicies: []
+  }
+}

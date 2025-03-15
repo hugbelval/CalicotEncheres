@@ -16,21 +16,6 @@ resource keyVault 'Microsoft.KeyVault/vaults@2021-06-01-preview' = {
   }
 }
 
-resource webApp 'Microsoft.Web/sites@2021-02-01' existing = {
-  name: webAppName
-  resourceGroup: webAppResourceGroup
-}
-
-resource webAppIdentity 'Microsoft.Web/sites@2021-02-01' = {
-  name: webAppName
-  location: location
-  properties: {
-    identity: {
-      type: 'SystemAssigned'
-    }
-  }
-}
-
 resource keyVaultAccessPolicy 'Microsoft.KeyVault/vaults/accessPolicies@2021-06-01-preview' = {
   name: keyVault.name
   properties: {

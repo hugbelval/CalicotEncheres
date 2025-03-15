@@ -60,9 +60,9 @@ resource webApp 'Microsoft.Web/sites@2021-02-01' = {
         }
       ]
     }
-    identity: {
-      type: 'SystemAssigned'
-    }
+  }
+  identity: {
+    type: 'SystemAssigned'
   }
 }
 

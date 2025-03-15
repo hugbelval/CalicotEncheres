@@ -27,25 +27,8 @@ resource virtualNetwork 'Microsoft.Network/virtualNetworks@2019-11-01' = {
   }
 }
 
-//2.
-
-resource webApplication 'Microsoft.Web/sites@2021-01-15' = {
-  name: 'app-calicot-dev-19'
-  //tier:'Standard S1'
-  location: 'Canada Central'
-  tags: {
-    'hidden-related:${resourceGroup().id}/providers/Microsoft.Web/serverfarms/appServicePlan': 'Resource'
-  }
-  properties: {
-    serverFarmId: 'webServerFarms.id'
-  }
-  
-}
-
-
 //2
 
-param codeIdentification string
 param location string = 'Canada Central'
 
 resource appServicePlan 'Microsoft.Web/serverfarms@2021-02-01' = {
@@ -62,7 +45,7 @@ resource appServicePlan 'Microsoft.Web/serverfarms@2021-02-01' = {
 }
 
 resource webApp 'Microsoft.Web/sites@2021-02-01' = {
-  name: 'app-calicot-dev-${codeIdentification}'
+  name: 'app-calicot-dev-19'
   location: location
   properties: {
     serverFarmId: appServicePlan.id
@@ -83,7 +66,7 @@ resource webApp 'Microsoft.Web/sites@2021-02-01' = {
 }
 
 resource autoScaleSetting 'Microsoft.Insights/autoscaleSettings@2021-05-01' = {
-  name: 'autoscale-calicot-dev-${codeIdentification}'
+  name: 'autoscale-calicot-dev-19'
   location: location
   properties: {
     profiles: [

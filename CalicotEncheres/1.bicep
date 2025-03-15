@@ -96,6 +96,7 @@ resource autoScaleSetting 'Microsoft.Insights/autoscalesettings@2022-10-01' = {
               direction: 'Increase'
               type: 'ChangeCount'
               cooldown: 'PT5M'
+              value: '1'
             }
           }
         ]

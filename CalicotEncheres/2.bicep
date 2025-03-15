@@ -1,75 +1,56 @@
 param codeIdentification string
 param location string = 'Canada Central'
+param webAppName string
+param webAppResourceGroup string
 
-resource appServicePlan 'Microsoft.Web/serverfarms@2021-02-01' = {
-  name: 'plan-calicot-dev-19'
+resource keyVault 'Microsoft.KeyVault/vaults@2021-06-01-preview' = {
+  name: 'kv-calicot-dev-${codeIdentification}'
   location: location
-  sku: {
-    name: 'S1'
-    tier: 'Standard'
-  }
   properties: {
-    perSiteScaling: false
-    maximumElasticWorkerCount: 2
+    sku: {
+      family: 'A'
+      name: 'standard'
+    }
+    tenantId: subscription().tenantId
+    accessPolicies: [] // Ajouté séparément après déploiement
   }
 }
 
-resource webApp 'Microsoft.Web/sites@2021-02-01' = {
-  name: 'app-calicot-dev-${codeIdentification}'
+resource webApp 'Microsoft.Web/sites@2021-02-01' existing = {
+  name: webAppName
+  resourceGroup: webAppResourceGroup
+}
+
+resource webAppIdentity 'Microsoft.Web/sites@2021-02-01' = {
+  name: webAppName
   location: location
   properties: {
-    serverFarmId: appServicePlan.id
-    httpsOnly: true
-    siteConfig: {
-      alwaysOn: true
-      appSettings: [
-        {
-          name: 'ImageUrl'
-          value: 'https://stcalicotprod000.blob.core.windows.net/images/'
-        }
-      ]
-    }
     identity: {
       type: 'SystemAssigned'
     }
   }
 }
 
-resource autoScaleSetting 'Microsoft.Insights/autoscaleSettings@2021-05-01' = {
-  name: 'autoscale-calicot-dev-${codeIdentification}'
-  location: location
+resource keyVaultAccessPolicy 'Microsoft.KeyVault/vaults/accessPolicies@2021-06-01-preview' = {
+  name: keyVault.name
   properties: {
-    profiles: [
+    accessPolicies: [
       {
-        name: 'defaultProfile'
-        capacity: {
-          default: 1
-          minimum: 1
-          maximum: 2
+        tenantId: subscription().tenantId
+        objectId: webAppIdentity.properties.identity.principalId
+        permissions: {
+          secrets: [ 'get', 'list' ]
         }
-        rules: [
-          {
-            metricTrigger: {
-              metricName: 'CpuPercentage'
-              metricNamespace: 'Microsoft.Web/sites'
-              operator: 'GreaterThan'
-              statistic: 'Average'
-              threshold: 70
-              timeAggregation: 'Average'
-              timeGrain: 'PT1M'
-              dimensions: []
-            }
-            scaleAction: {
-              direction: 'Increase'
-              type: 'ChangeCount'
-              value: 1
-              cooldown: 'PT5M'
-            }
-          }
-        ]
       }
     ]
-    targetResourceUri: webApp.id
-    enabled: true
   }
+  dependsOn: [ keyVault, webAppIdentity ]
+}
+
+resource appSettings 'Microsoft.Web/sites/config@2021-02-01' = {
+  name: '${webAppName}/web'
+  properties: {
+    "ConnectionStrings": "@Microsoft.KeyVault(SecretUri=${keyVault.properties.vaultUri}secrets/ConnectionStrings/)"
+  }
+  dependsOn: [ keyVault, webApp ]
 }

@@ -110,7 +110,7 @@ resource autoScaleSetting 'Microsoft.Insights/autoscalesettings@2022-10-01' = {
 //3
 param adminUser string = 'adminuser'
 @secure()
-param adminPassword string = ''
+param adminPassword string
 
 resource sqlServer 'Microsoft.Sql/servers@2022-05-01-preview' = {
   name: 'sqlsrv-calicot-dev-19'

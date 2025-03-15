@@ -1,5 +1,4 @@
-name: Deploy Bicep file
-on: [push]
+name: Run IaC deployment
 jobs:
   build-and-deploy:
     runs-on: ubuntu-latest
